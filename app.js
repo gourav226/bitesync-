@@ -1,5 +1,10 @@
-// Premium Food App Database (BiteSync)
-const RESTAURANTS = [
+// BiteSync — Dynamic Backend-Powered App
+// Restaurants and order data are loaded from the Express backend API.
+
+// Application State (restaurants populated after fetch)
+let RESTAURANTS = []; // Will be filled from /api/restaurants
+
+const RESTAURANTS_PLACEHOLDER = [
     {
         id: 1,
         name: "The Grand Biryani Shahi",
@@ -189,6 +194,19 @@ const RESTAURANTS = [
     }
 ];
 
+// Application State
+let appState = {
+    restaurants: [],
+    filteredRestaurants: [],
+    cart: [],
+    activeFilter: 'all',
+    sortBy: 'relevance',
+    searchQuery: '',
+    selectedCategory: '',
+    selectedRestaurant: null,
+    couponApplied: null
+};
+
 // Carousel Cuisines items
 const CUISINE_CATEGORIES = [
     { name: "Biryani", emoji: "🍛", keyword: "Biryani" },
@@ -205,17 +223,17 @@ const CUISINE_CATEGORIES = [
     { name: "Coffee", emoji: "☕", keyword: "Coffee" }
 ];
 
-// Application State
+// Application State (restaurants populated after API fetch)
 let appState = {
-    restaurants: [...RESTAURANTS],
-    filteredRestaurants: [...RESTAURANTS],
+    restaurants: [],
+    filteredRestaurants: [],
     cart: [], // Format: { restaurantId, item, quantity }
-    activeFilter: 'all', // all, rating, veg, fast
+    activeFilter: 'all',
     sortBy: 'relevance',
     searchQuery: '',
     selectedCategory: '',
     selectedRestaurant: null,
-    couponApplied: null // Coupon details if loaded
+    couponApplied: null
 };
 
 // DOM References
@@ -282,12 +300,36 @@ function playSystemVoice(message) {
     }
 }
 
-// Initialize Application
-document.addEventListener("DOMContentLoaded", () => {
-    loadCategoryCarousel();
-    renderRestaurants();
+// Initialize Application — fetch restaurant data from backend API
+document.addEventListener("DOMContentLoaded", async () => {
     setupThemeToggle();
     setupEventListeners();
+    loadCategoryCarousel();
+
+    // Show loading state
+    restaurantGrid.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:4rem 1rem; color:var(--text-secondary);">
+            <div style="font-size:2.5rem; margin-bottom:1rem;">🍽️</div>
+            <p style="font-weight:600;">Loading restaurants...</p>
+        </div>`;
+
+    try {
+        const response = await fetch('/api/restaurants');
+        if (!response.ok) throw new Error('API not available');
+        const data = await response.json();
+        RESTAURANTS = data;
+        appState.restaurants = [...RESTAURANTS];
+        appState.filteredRestaurants = [...RESTAURANTS];
+        console.log(`[BiteSync] Loaded ${RESTAURANTS.length} restaurants from backend API.`);
+    } catch (err) {
+        // Fallback: use embedded placeholder data (works on static hosting / offline)
+        console.warn('[BiteSync] Backend unavailable, using embedded data.', err.message);
+        RESTAURANTS = [...RESTAURANTS_PLACEHOLDER];
+        appState.restaurants = [...RESTAURANTS];
+        appState.filteredRestaurants = [...RESTAURANTS];
+    }
+
+    renderRestaurants();
 });
 
 // Setup Dark/Light Theme Switching
@@ -647,7 +689,7 @@ function addItemToCart(itemId) {
     
     // Check if adding from a different restaurant
     if (appState.cart.length > 0 && appState.cart[0].restaurantId !== appState.selectedRestaurant.id) {
-        const previousRestaurant = RESTAURANTS.find(r => r.id === appState.cart[0].restaurantId);
+        const previousRestaurant = appState.restaurants.find(r => r.id === appState.cart[0].restaurantId);
         
         const confirmClear = confirm(`Your cart contains items from "${previousRestaurant.name}". Clear cart and add dishes from "${appState.selectedRestaurant.name}"?`);
         if (confirmClear) {
