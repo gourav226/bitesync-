@@ -96,6 +96,16 @@ function showView(viewId) {
     if (activeView) {
         activeView.style.display = "block";
     }
+
+    // Update navbar active link highlight
+    document.querySelectorAll(".nav-btn-link").forEach(link => {
+        if (link.getAttribute("data-view") === viewId) {
+            link.classList.add("active");
+        } else {
+            link.classList.remove("active");
+        }
+    });
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -169,6 +179,38 @@ function loadCategoryCarousel() {
 
 // Common Event Listeners (Header, Cart Drawer, Checkout Page, etc.)
 function setupCommonEventListeners() {
+    // Navbar nav links (SPA view toggling)
+    const navLinks = document.querySelectorAll(".nav-btn-link");
+    navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            const viewId = link.getAttribute("data-view");
+            
+            if (viewId === "menuView" && !appState.selectedRestaurant) {
+                // If no restaurant selected, default to the first one in database
+                openRestaurantMenu(appState.restaurants[0]);
+            } else if (viewId === "checkoutView") {
+                renderCheckoutView();
+                showView("checkoutView");
+            } else if (viewId === "trackingView") {
+                // If there's no active order in progress, mock one for previewing
+                if (!localStorage.getItem('bitesync-active-order')) {
+                    const fallbackHero = ["Rohan Sharma", "Aman Verma", "Rahul Gupta", "Vikram Rathore"][Math.floor(Math.random() * 4)];
+                    const mockOrder = {
+                        orderId: 'ORD-' + Math.floor(Math.random() * 900000 + 100000),
+                        courierName: fallbackHero,
+                        eta: "25 mins",
+                        timePlaced: getCurrentTime()
+                    };
+                    localStorage.setItem('bitesync-active-order', JSON.stringify(mockOrder));
+                }
+                showView("trackingView");
+                resumeLiveOrderSimulation();
+            } else {
+                showView(viewId);
+            }
+        });
+    });
+
     // Logo Click (Back to Home)
     const logoBtn = document.getElementById("logoBtn");
     if (logoBtn) {
