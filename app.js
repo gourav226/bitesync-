@@ -1,12 +1,24 @@
 // BiteSync — Premium Food Delivery Single Page Application (app.js)
 
+// Safe localStorage parser helper
+function safeGetJSON(key, fallback) {
+    try {
+        const val = localStorage.getItem(key);
+        if (!val) return fallback;
+        return JSON.parse(val);
+    } catch (e) {
+        console.warn(`[BiteSync] Failed parsing localStorage key "${key}":`, e);
+        return fallback;
+    }
+}
+
 // Application State
 let RESTAURANTS = [];
 let appState = {
     restaurants: [],
     filteredRestaurants: [],
-    cart: JSON.parse(localStorage.getItem('bitesync-cart')) || [],
-    couponApplied: JSON.parse(localStorage.getItem('bitesync-coupon')) || null,
+    cart: safeGetJSON('bitesync-cart', []),
+    couponApplied: safeGetJSON('bitesync-coupon', null),
     activeFilter: 'all',
     sortBy: 'relevance',
     searchQuery: '',
@@ -67,7 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderRestaurantsGrid();
     
     // Check if there was an active order in progress to resume tracker
-    if (localStorage.getItem('bitesync-active-order')) {
+    const activeOrder = safeGetJSON('bitesync-active-order', null);
+    if (activeOrder) {
         showView('trackingView');
         resumeLiveOrderSimulation();
     } else {
@@ -1032,9 +1045,8 @@ async function runCheckoutPlaceOrder() {
 
 // Live Order simulation
 function resumeLiveOrderSimulation() {
-    const activeOrderData = localStorage.getItem('bitesync-active-order');
-    if (!activeOrderData) return;
-    const order = JSON.parse(activeOrderData);
+    const order = safeGetJSON('bitesync-active-order', null);
+    if (!order) return;
 
     const courier = document.getElementById("courierName");
     const eta = document.getElementById("etaTime");
