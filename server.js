@@ -227,7 +227,7 @@ app.post('/api/order', (req, res) => {
     });
 });
 
-// Fallback index.html router for SPA behavior (optional but good practice)
+// Fallback index.html router for SPA behavior (all routing handled client-side)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });

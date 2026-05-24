@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- App Header/Navbar -->
+    <!-- App Header/Navbar (SHARED GLOBAL) -->
     <header class="app-header">
         <div class="header-container">
             <!-- Logo Section -->
-            <div class="logo-section">
+            <div class="logo-section" id="logoBtn">
                 <div class="logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                 </div>
@@ -39,10 +39,10 @@
                 </div>
 
                 <!-- Offers Link -->
-                <a href="#offers" class="nav-link" id="offersBtn">
+                <button class="nav-link" id="offersBtn" style="background: none; border: none; font-family: inherit;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                     <span>Offers</span>
-                </a>
+                </button>
 
                 <!-- Theme Toggle -->
                 <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
@@ -69,93 +69,281 @@
 
     <!-- Main Container -->
     <main class="main-content">
-        <!-- Hero Cuisines Carousel -->
-        <section class="hero-carousel-section">
-            <h2 class="section-title">What's on your mind?</h2>
-            <div class="carousel-outer">
-                <button class="carousel-nav prev" id="carouselPrev">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                </button>
-                <div class="carousel-track-container">
-                    <div class="carousel-track" id="categoryTrack">
-                        <!-- Categories dynamically loaded by JS -->
+        
+        <!-- 1. HOME VIEW -->
+        <div id="homeView" class="view-section">
+            <!-- Hero Cuisines Carousel -->
+            <section class="hero-carousel-section">
+                <h2 class="section-title">What's on your mind?</h2>
+                <div class="carousel-outer">
+                    <button class="carousel-nav prev" id="carouselPrev">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <div class="carousel-track-container">
+                        <div class="carousel-track" id="categoryTrack">
+                            <!-- Categories dynamically loaded by JS -->
+                        </div>
+                    </div>
+                    <button class="carousel-nav next" id="carouselNext">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Featured Outlets -->
+            <section class="restaurants-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                    <h2 class="section-title" style="margin-bottom: 0;">Top Restaurant Chains</h2>
+                    <button class="nav-link" id="viewAllBtn" style="background: none; border: none; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 0.2rem; cursor: pointer;">
+                        <span>View All</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+                <div class="restaurant-grid" id="featuredGrid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. RESTAURANTS LISTING VIEW -->
+        <div id="restaurantsView" class="view-section" style="display: none;">
+            <!-- Filters & Sort Options -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <button class="filter-btn active" data-filter="all">All Restaurants</button>
+                    <button class="filter-btn" data-filter="rating">⭐ Ratings 4.4+</button>
+                    <button class="filter-btn" data-filter="veg">🌿 Pure Veg</button>
+                    <button class="filter-btn" data-filter="fast">⚡ Fast Delivery</button>
+                    <button class="filter-btn filter-btn--new" data-filter="new">🆕 New Arrivals</button>
+                    <button class="filter-btn filter-btn--budget" data-filter="budget">💰 Budget Picks</button>
+                    <button class="filter-btn filter-btn--offers" data-filter="offers">🎉 Offers Only</button>
+                    
+                    <div class="sort-dropdown-container">
+                        <label for="sortBy">Sort By:</label>
+                        <select id="sortBy">
+                            <option value="relevance">Relevance</option>
+                            <option value="rating-desc">Rating: High to Low</option>
+                            <option value="cost-asc">Cost: Low to High</option>
+                            <option value="cost-desc">Cost: High to Low</option>
+                            <option value="time-asc">Fastest Delivery</option>
+                        </select>
                     </div>
                 </div>
-                <button class="carousel-nav next" id="carouselNext">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </button>
-            </div>
-        </section>
-
-        <!-- Filters & Sort Options -->
-        <section class="filters-section">
-            <div class="filters-container">
-                <button class="filter-btn active" data-filter="all">All Restaurants</button>
-                <button class="filter-btn" data-filter="rating">⭐ Ratings 4.4+</button>
-                <button class="filter-btn" data-filter="veg">🌿 Pure Veg</button>
-                <button class="filter-btn" data-filter="fast">⚡ Fast Delivery</button>
-                <button class="filter-btn filter-btn--new" data-filter="new">🆕 New Arrivals</button>
-                <button class="filter-btn filter-btn--budget" data-filter="budget">💰 Budget Picks</button>
-                <button class="filter-btn filter-btn--offers" data-filter="offers">🎉 Offers Only</button>
-                
-                <div class="sort-dropdown-container">
-                    <label for="sortBy">Sort By:</label>
-                    <select id="sortBy">
-                        <option value="relevance">Relevance</option>
-                        <option value="rating-desc">Rating: High to Low</option>
-                        <option value="cost-asc">Cost: Low to High</option>
-                        <option value="cost-desc">Cost: High to Low</option>
-                        <option value="time-asc">Fastest Delivery</option>
-                    </select>
+                <div class="active-filters-info" id="activeFiltersInfo">
+                    Showing all popular restaurants around you
                 </div>
-            </div>
-            <div class="active-filters-info" id="activeFiltersInfo">
-                Showing all popular restaurants around you
-            </div>
-        </section>
+            </section>
 
-        <!-- Restaurants Section -->
-        <section class="restaurants-section">
-            <h2 class="section-title" id="restaurantGridTitle">Top Restaurant Chains</h2>
-            <div class="restaurant-grid" id="restaurantGrid">
-                <!-- Skeleton Loader (displayed while loading JS) -->
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-                <div class="skeleton-card"></div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Slide-in Restaurant Menu Detail View -->
-    <div class="menu-overlay" id="menuOverlay">
-        <div class="menu-container">
-            <button class="menu-close-btn" id="menuCloseBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-            
-            <!-- Restaurant Banner Info -->
-            <div class="menu-header-banner" id="menuHeaderBanner">
-                <!-- Set dynamically by JS -->
-            </div>
-
-            <!-- Restaurant Menu Body -->
-            <div class="menu-body">
-                <div class="menu-tabs" id="menuTabs">
-                    <button class="tab-btn active" data-category="all">Full Menu</button>
-                    <button class="tab-btn" data-category="recommended">★ Recommended</button>
-                    <button class="tab-btn" data-category="veg">Pure Veg Only</button>
+            <!-- Restaurants Grid -->
+            <section class="restaurants-section">
+                <h2 class="section-title" id="restaurantGridTitle">Top Restaurant Chains</h2>
+                <div class="restaurant-grid" id="restaurantGrid">
+                    <!-- Skeleton Card placeholders -->
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
                 </div>
-                
-                <!-- Food Menu Items List -->
-                <div class="menu-items-list" id="menuItemsList">
-                    <!-- Dynamically rendered -->
+            </section>
+        </div>
+
+        <!-- 3. MENU PAGE VIEW -->
+        <div id="menuView" class="view-section" style="display: none;">
+            <div class="menu-page-wrapper">
+                <!-- Restaurant Banner Info -->
+                <div class="menu-page-header-banner" id="menuHeaderBanner">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <!-- Restaurant Menu Body -->
+                <div class="menu-body">
+                    <div class="menu-tabs" id="menuTabs">
+                        <button class="tab-btn active" data-category="all">Full Menu</button>
+                        <button class="tab-btn" data-category="recommended">★ Recommended</button>
+                        <button class="tab-btn" data-category="veg">Pure Veg Only</button>
+                    </div>
+                    
+                    <!-- Food Menu Items List -->
+                    <div class="menu-items-list" id="menuItemsList">
+                        <!-- Dynamically rendered -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Sliding Shopping Cart Drawer -->
+        <!-- 4. CHECKOUT VIEW -->
+        <div id="checkoutView" class="view-section" style="display: none;">
+            <div class="checkout-page-container">
+                <h2 class="section-title">Secure Fast Checkout</h2>
+                
+                <div class="checkout-grid">
+                    <!-- Left Side: Address & Payment Details -->
+                    <div class="checkout-form-details">
+                        <!-- Delivery Details -->
+                        <div class="checkout-block">
+                            <h3 class="checkout-section-title">Delivery Address</h3>
+                            <div class="address-cards">
+                                <div class="address-card selected" id="addrHome">
+                                    <span class="tag">Home</span>
+                                    <p>Bandra West, Link Road, Mumbai - 400050</p>
+                                </div>
+                                <div class="address-card" id="addrOffice">
+                                    <span class="tag">Office</span>
+                                    <p>Maker Chambers, Nariman Point, Mumbai - 400021</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Methods -->
+                        <div class="checkout-block" style="margin-top: 2rem;">
+                            <h3 class="checkout-section-title">Payment Method</h3>
+                            <div class="payment-options">
+                                <label class="payment-option selected">
+                                    <input type="radio" name="paymentMethod" value="upi" checked>
+                                    <span class="payment-desc">
+                                        <strong>Instant UPI (PhonePe / GPay)</strong>
+                                        <span class="subtext">Super secure, quick authentication</span>
+                                    </span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="card">
+                                    <span class="payment-desc">
+                                        <strong>Credit / Debit Card</strong>
+                                        <span class="subtext">Visa, MasterCard, RuPay</span>
+                                    </span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="cod">
+                                    <span class="payment-desc">
+                                        <strong>Cash on Delivery</strong>
+                                        <span class="subtext">Pay on arrival at your door</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Order Review & Bill Summary -->
+                    <div class="checkout-review-summary">
+                        <h3 class="checkout-section-title">Review Basket</h3>
+                        
+                        <!-- Small Inline Cart Items list -->
+                        <div class="checkout-cart-items" id="checkoutCartItems" style="max-height: 200px; overflow-y: auto; margin-bottom: 1.5rem; gap: 0.8rem; display: flex; flex-direction: column;">
+                            <!-- Rendered by JS -->
+                        </div>
+
+                        <!-- Coupon Block (copied layout) -->
+                        <div class="coupon-section">
+                            <div class="coupon-input-wrapper">
+                                <input type="text" id="checkoutCouponCode" placeholder="Enter BITE50 or FREEGRAND">
+                                <button id="checkoutApplyCouponBtn">Apply</button>
+                            </div>
+                            <div class="coupon-message" id="checkoutCouponMessage"></div>
+                        </div>
+
+                        <!-- Bill Breakdown -->
+                        <div class="bill-details" style="margin-top: 1.5rem;">
+                            <h4>Bill Details</h4>
+                            <div class="bill-row">
+                                <span>Item Total</span>
+                                <span id="checkoutBillItemTotal">₹0.00</span>
+                            </div>
+                            <div class="bill-row">
+                                <span>Delivery Partner Fee</span>
+                                <span id="checkoutBillDeliveryFee">₹40.00</span>
+                            </div>
+                            <div class="bill-row">
+                                <span>Govt Taxes & Restaurant Charges</span>
+                                <span id="checkoutBillTaxes">₹24.00</span>
+                            </div>
+                            <div class="bill-row discount-row" id="checkoutBillDiscountRow" style="display: none;">
+                                <span>Coupon Discount Applied</span>
+                                <span id="checkoutBillDiscount">-₹0.00</span>
+                            </div>
+                            <div class="bill-row grand-total">
+                                <span>Total Payable</span>
+                                <span id="checkoutBillGrandTotal">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="pay-amount-box" style="margin-top: 1.5rem; padding: 0;">
+                            <button class="pay-now-btn" id="payNowBtn" style="width: 100%; padding: 0.9rem; font-size: 1rem; border-radius: 30px;">Pay & Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. LIVE ORDER TRACKING VIEW -->
+        <div id="trackingView" class="view-section" style="display: none;">
+            <div class="tracking-page-container">
+                <h3 class="tracking-title">🚀 Simulating Live Delivery</h3>
+                
+                <div class="tracking-box">
+                    <!-- Visual Map/Progress Bar Simulation -->
+                    <div class="tracking-road-simulation">
+                        <div class="road-path"></div>
+                        <div class="delivery-bike" id="deliveryBike">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        </div>
+                        <div class="destination-house">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <div class="tracking-details">
+                        <div class="courier-info">
+                            <div class="courier-avatar">🏍️</div>
+                            <div class="courier-text">
+                                <strong id="courierName">Rohan Sharma</strong>
+                                <span>Your BiteSync Delivery Hero</span>
+                            </div>
+                            <div class="eta-box">
+                                <span class="eta-lbl">ETA</span>
+                                <span class="eta-time" id="etaTime">18 mins</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Timeline Stepper -->
+                        <div class="tracking-timeline">
+                            <div class="timeline-step" id="step1">
+                                <div class="step-icon">✓</div>
+                                <div class="step-info">
+                                    <strong>Order Received</strong>
+                                    <span id="step1Time">Checking restaurant inventory...</span>
+                                </div>
+                            </div>
+                            <div class="timeline-step" id="step2">
+                                <div class="step-icon">🍳</div>
+                                <div class="step-info">
+                                    <strong>Kitchen Preparing</strong>
+                                    <span id="step2Time">Chef is starting to cook your feast...</span>
+                                </div>
+                            </div>
+                            <div class="timeline-step" id="step3">
+                                <div class="step-icon">📦</div>
+                                <div class="step-info">
+                                    <strong>Food Picked Up</strong>
+                                    <span id="step3Time">Hot & fresh meal packed securely...</span>
+                                </div>
+                            </div>
+                            <div class="timeline-step" id="step4">
+                                <div class="step-icon">🏡</div>
+                                <div class="step-info">
+                                    <strong>Delivered</strong>
+                                    <span id="step4Time">Enjoy your premium BiteSync meal!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="dismiss-tracking-btn" id="dismissTrackingBtn" disabled>Awaiting Handover...</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Sliding Shopping Cart Drawer (GLOBAL OVERLAY) -->
     <div class="cart-drawer-overlay" id="cartDrawerOverlay">
         <div class="cart-drawer" id="cartDrawer">
             <div class="cart-drawer-header">
@@ -168,7 +356,6 @@
             <div class="cart-drawer-body">
                 <!-- Cart Items Container -->
                 <div class="cart-items-container" id="cartItemsContainer">
-                    <!-- If Empty -->
                     <div class="empty-cart-message">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                         <p>Your basket is crying for delicious food. Let's fill it up!</p>
@@ -218,138 +405,7 @@
         </div>
     </div>
 
-    <!-- Checkout / Payment Modal -->
-    <div class="modal-overlay" id="checkoutModal">
-        <div class="modal-content">
-            <button class="modal-close" id="checkoutClose">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-            <h3 class="modal-title">Secure Fast Checkout</h3>
-            
-            <div class="checkout-form">
-                <!-- Delivery Details -->
-                <div class="checkout-block">
-                    <label class="block-label">Select Delivery Address</label>
-                    <div class="address-cards">
-                        <div class="address-card selected">
-                            <span class="tag">Home</span>
-                            <p>Bandra West, Link Road, Mumbai - 400050</p>
-                        </div>
-                        <div class="address-card">
-                            <span class="tag">Office</span>
-                            <p>Maker Chambers, Nariman Point, Mumbai - 400021</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment Methods -->
-                <div class="checkout-block">
-                    <label class="block-label">Select Payment Method</label>
-                    <div class="payment-options">
-                        <label class="payment-option selected">
-                            <input type="radio" name="paymentMethod" value="upi" checked>
-                            <span class="payment-desc">
-                                <strong>Instant UPI (PhonePe / GPay)</strong>
-                                <span class="subtext">Super secure, quick authentication</span>
-                            </span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="card">
-                            <span class="payment-desc">
-                                <strong>Credit / Debit Card</strong>
-                                <span class="subtext">Visa, MasterCard, RuPay</span>
-                            </span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="cod">
-                            <span class="payment-desc">
-                                <strong>Cash on Delivery</strong>
-                                <span class="subtext">Pay on arrival at your door</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="pay-amount-box">
-                    <div class="amount-detail">
-                        <span>Total Payable Amount</span>
-                        <h2 id="finalPayAmount">₹0.00</h2>
-                    </div>
-                    <button class="pay-now-btn" id="payNowBtn">Pay & Place Order</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Live Order Tracking & Simulation Modal -->
-    <div class="modal-overlay" id="trackingModal">
-        <div class="tracking-modal-content">
-            <h3 class="tracking-title">🚀 Simulating Live Delivery</h3>
-            
-            <div class="tracking-box">
-                <!-- Visual Map/Progress Bar Simulation -->
-                <div class="tracking-road-simulation">
-                    <div class="road-path"></div>
-                    <div class="delivery-bike" id="deliveryBike">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                    </div>
-                    <div class="destination-house">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    </div>
-                </div>
-
-                <div class="tracking-details">
-                    <div class="courier-info">
-                        <div class="courier-avatar">🏍️</div>
-                        <div class="courier-text">
-                            <strong id="courierName">Rohan Sharma</strong>
-                            <span>Your BiteSync Delivery Hero</span>
-                        </div>
-                        <div class="eta-box">
-                            <span class="eta-lbl">ETA</span>
-                            <span class="eta-time" id="etaTime">18 mins</span>
-                        </div>
-                    </div>
-
-                    <!-- Live Timeline Stepper -->
-                    <div class="tracking-timeline">
-                        <div class="timeline-step active" id="step1">
-                            <div class="step-icon">✓</div>
-                            <div class="step-info">
-                                <strong>Order Received</strong>
-                                <span id="step1Time">Checking restaurant inventory...</span>
-                            </div>
-                        </div>
-                        <div class="timeline-step" id="step2">
-                            <div class="step-icon">🍳</div>
-                            <div class="step-info">
-                                <strong>Kitchen Preparing</strong>
-                                <span id="step2Time">Chef is starting to cook your feast...</span>
-                            </div>
-                        </div>
-                        <div class="timeline-step" id="step3">
-                            <div class="step-icon">📦</div>
-                            <div class="step-info">
-                                <strong>Food Picked Up</strong>
-                                <span id="step3Time">Hot & fresh meal packed securely...</span>
-                            </div>
-                        </div>
-                        <div class="timeline-step" id="step4">
-                            <div class="step-icon">🏡</div>
-                            <div class="step-info">
-                                <strong>Delivered</strong>
-                                <span id="step4Time">Enjoy your premium BiteSync meal!</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="dismiss-tracking-btn" id="dismissTrackingBtn" disabled>Awaiting Handover...</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- App Footer -->
+    <!-- App Footer (SHARED GLOBAL) -->
     <footer class="app-footer">
         <div class="footer-container">
             <div class="footer-brand">
@@ -383,7 +439,7 @@
         </div>
     </footer>
 
-    <!-- Main JavaScript Logic -->
+    <!-- Main JS (Consolidated SPA Logic) -->
     <script src="app.js"></script>
 </body>
 </html>
